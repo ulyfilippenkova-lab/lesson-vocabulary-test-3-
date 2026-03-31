@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Тест · Слова и фразы · Урок 1–2</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,400&family=Jost:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --milk:#faf8f4;--milk2:#f2ede4;--milk3:#e8e1d4;
+  --ink:#0f0e0c;--ink2:#2e2b25;--ink3:#6b6560;
+  --rule:#d4cdc3;
+  --serif:'Cormorant Garamond',Georgia,serif;
+  --sans:'Jost',sans-serif;
+  --mono:'JetBrains Mono',monospace;
+  --green:#1a5a2a;--red:#8b2020;
+}
+body{background:var(--milk);color:var(--ink);font-family:var(--sans);font-weight:300;line-height:1.7;-webkit-font-smoothing:antialiased}
+.page{max-width:720px;margin:0 auto;padding:2.5rem 1.75rem 6rem}
+
+/* HEADER */
+.header{border-top:3px solid var(--ink);padding:1.75rem 0 1.5rem;margin-bottom:2rem;border-bottom:1px solid var(--rule)}
+.h-kicker{font-family:var(--mono);font-size:.56rem;letter-spacing:.22em;text-transform:uppercase;color:var(--ink3);margin-bottom:.5rem}
+.h-title{font-family:var(--serif);font-size:clamp(1.8rem,4vw,3rem);font-weight:700;line-height:1.05;margin-bottom:.3rem}
+.h-sub{font-size:.8rem;color:var(--ink3);line-height:1.65}
+
+/* INTRO */
+.intro{background:var(--ink);color:white;padding:1.1rem 1.4rem;margin-bottom:2rem}
+.intro-l{font-family:var(--mono);font-size:.52rem;letter-spacing:.18em;text-transform:uppercase;color:#888;margin-bottom:.4rem}
+.intro-text{font-size:.83rem;line-height:1.7;color:#e0d8cc}
+.intro-text b{color:white;font-weight:600}
+
+/* SECTION */
+.sec-title{font-family:var(--serif);font-size:1.15rem;font-weight:600;margin-bottom:.2rem;padding-bottom:.5rem;border-bottom:1px solid var(--rule);margin-top:2rem}
+.sec-sub{font-size:.75rem;color:var(--ink3);margin-bottom:1rem;margin-top:.2rem;line-height:1.5}
+
+/* QUESTION */
+.q-list{list-style:none;margin-bottom:1.5rem}
+.q-item{border:1px solid var(--rule);margin-bottom:.75rem;overflow:hidden;background:white}
+.q-item.correct{border-color:var(--green)}
+.q-item.wrong{border-color:var(--red)}
+.q-top{display:grid;grid-template-columns:28px 1fr;background:var(--milk2);border-bottom:1px solid var(--rule)}
+.q-n{padding:.5rem .6rem;font-family:var(--mono);font-size:.62rem;color:var(--ink3);text-align:center;border-right:1px solid var(--rule);display:flex;align-items:center;justify-content:center}
+.q-ru{padding:.5rem .9rem;font-size:.85rem;font-weight:500;color:var(--ink)}
+.q-ru .hint{font-size:.7rem;color:var(--ink3);font-weight:300;display:block;margin-top:.05rem;font-style:italic}
+.q-input-wrap{padding:.55rem .9rem;display:flex;gap:.6rem;align-items:center}
+.q-input{border:none;border-bottom:1.5px solid var(--rule);flex:1;background:transparent;font-family:var(--sans);font-size:.83rem;color:var(--ink);outline:none;padding:.2rem 0;transition:border .15s}
+.q-input:focus{border-bottom-color:var(--ink)}
+.q-input.correct-input{border-bottom-color:var(--green);color:var(--green)}
+.q-input.wrong-input{border-bottom-color:var(--red)}
+.q-check{font-family:var(--mono);font-size:.65rem;flex-shrink:0}
+.q-answer{display:none;padding:.4rem .9rem .6rem;font-size:.78rem;color:var(--green);font-style:italic;border-top:1px dashed var(--rule)}
+.q-answer.show{display:block}
+.q-answer .label{font-family:var(--mono);font-size:.5rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink3);margin-right:.4rem;font-style:normal}
+
+/* BUTTONS */
+.btn-check{font-family:var(--mono);font-size:.55rem;letter-spacing:.12em;text-transform:uppercase;padding:.45rem 1.1rem;border:1px solid var(--ink);background:transparent;color:var(--ink);cursor:pointer;transition:all .15s;margin-top:1rem;margin-right:.5rem}
+.btn-check:hover{background:var(--ink);color:white}
+.btn-reset{font-family:var(--mono);font-size:.55rem;letter-spacing:.12em;text-transform:uppercase;padding:.45rem 1.1rem;border:1px solid var(--rule);background:transparent;color:var(--ink3);cursor:pointer;transition:all .15s;margin-top:1rem}
+.btn-reset:hover{border-color:var(--ink3);color:var(--ink)}
+
+/* SCORE */
+.score{display:none;background:var(--milk2);border:1px solid var(--rule);padding:1.1rem 1.4rem;margin-top:1.5rem;text-align:center}
+.score.show{display:block}
+.score-n{font-family:var(--serif);font-size:3rem;font-weight:700;line-height:1}
+.score-label{font-size:.8rem;color:var(--ink3);margin-top:.3rem}
+.score-msg{font-size:.85rem;margin-top:.5rem;font-style:italic;color:var(--ink2)}
+
+/* PHRASE TASK */
+.phrase-task{border:1px solid var(--rule);margin-bottom:.75rem;overflow:hidden;background:white}
+.pt-top{background:var(--milk2);padding:.5rem .9rem;border-bottom:1px solid var(--rule);display:grid;grid-template-columns:28px 1fr;gap:.4rem;align-items:center}
+.pt-n{font-family:var(--mono);font-size:.62rem;color:var(--ink3)}
+.pt-ru{font-size:.83rem;font-weight:500}
+.pt-body{padding:.6rem .9rem}
+.pt-input{border:none;border-bottom:1.5px solid var(--rule);width:100%;background:transparent;font-family:var(--sans);font-size:.82rem;color:var(--ink);outline:none;padding:.25rem 0;transition:border .15s}
+.pt-input:focus{border-bottom-color:var(--ink)}
+.pt-input.correct-input{border-bottom-color:var(--green);color:var(--green)}
+.pt-input.wrong-input{border-bottom-color:var(--red)}
+.pt-answer{display:none;font-size:.77rem;color:var(--green);font-style:italic;margin-top:.4rem;padding-top:.4rem;border-top:1px dashed var(--rule)}
+.pt-answer.show{display:block}
+
+@media(max-width:480px){
+  .q-top{grid-template-columns:22px 1fr}
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+<!-- HEADER -->
+<div class="header">
+  <div class="h-kicker">Тест · Д/З · После урока 3</div>
+  <div class="h-title">Слова и фразы.<br>Переводи.</div>
+  <div class="h-sub">Слова из TED Talk + фразы из уроков 1–2. Переводи с русского на английский.</div>
+</div>
+
+<!-- INTRO -->
+<div class="intro">
+  <div class="intro-l">Как делать</div>
+  <div class="intro-text">
+    Читаешь русское значение → пишешь английское слово или фразу. <b>Без подсказок.</b> Потом нажми «Проверить» и увидишь правильные ответы. Цель — не идеальный результат, а понять что ещё нужно повторить.
+  </div>
+</div>
+
+<!-- ЧАСТЬ 1: СЛОВА ИЗ TED -->
+<div class="sec-title">Часть 1 — Слова из TED Talk</div>
+<div class="sec-sub">Переведи с русского на английский. Пиши то слово или фразу которое использовали в видео.</div>
+
+<ul class="q-list" id="list-words">
+
+  <li class="q-item" data-answer="force for good">
+    <div class="q-top"><div class="q-n">1</div><div class="q-ru">сила для блага<span class="hint">маркетинг как инструмент пользы для общества</span></div></div>
+    <div class="q-input-wrap"><input class="q-input" placeholder="напиши по-английски…" spellcheck="false"><span class="q-check"></span></div>
+    <div class="q-answer"><span class="label">ответ</span>force for good</div>
+  </li>
+
+  <li class="q-item" data-answer="purpose">
+    <div class="q-top"><div class="q-n">2</div><div class="q-ru">цель / смысл существования<span class="hint">«What is your company's ___ beyond profit?»</span></div></div>
+    <div class="q-input-wrap"><input class="q-input" placeholder="одно слово…" spellcheck="false"><span class="q-check"></span></div>
+    <div class="q-answer"><span class="label">ответ</span>purpose</div>
+  </li>
+
+  <li class="q-item" data-answer="differentiate">
+    <div class="q-top"><div class="q-n">3</div><div class="q-ru">выделяться / отличаться<span class="hint">«How do you ___ your brand?»</span></div></div>
+    <div class="q-input-wrap"><input class="q-input" placeholder="один глагол…" spellcheck="false"><span class="q-check"></span></div>
+    <div class="q-answer"><span class="label">ответ</span>differentiate</div>
+  </li>
+
+  <li class="q-item" data-answer="genuinely">
+    <div class="q-top"><div class="q-n">4</div><div class="q-ru">искренне / по-настоящему<span class="hint">«Are you ___ helping your audience?»</span></div></div>
+    <div class="q-input-wrap"><input class="q-input" placeholder="одно слово…" spellcheck="false"><span class="q-check"></span></div>
+    <div class="q-answer"><span class="label">ответ</span>genuinely</div>
+  </li>
+
+  <li class="q-item" data-answer="invaluable">
+    <div class="q-top"><div class="q-n">5</div><div class="q-ru">бесценный<span class="hint">«Trust from your audience is ___.»</span></div></div>
+    <div class="q-input-wrap"><input class="q-input" placeholder="одно слово…" spellcheck="false"><span class="q-check"></span></div>
+    <div class="q-answer"><span class="label">ответ</span>invaluable</div>
+  </li>
+
+  <li class="q-item" data-answer="empathize">
+    <div class="q-top"><div class="q-n">6</div><div class="q-ru">сопереживать / понимать аудиторию<span class="hint">«___ with your audience's problems.»</span></div></div>
+    <div class="q-input-wrap"><input class="q-input" placeholder="один глагол…" spellcheck="false"><span class="q-check"></span></div>
+    <div class="q-answer"><span class="label">ответ</span>empathize</div>
+  </li>
+
+  <li class="q-item" data-answer="overwhelmed">
+    <div class="q-top"><div class="q-n">7</div><div class="q-ru">перегруженный / не справляющийся<span class="hint">«I'm ___ with projects right now.»</span></div></div>
+    <div class="q-input-wrap"><input class="q-input" placeholder="одно слово…" spellcheck="false"><span class="q-check"></span></div>
+    <div class="q-answer"><span class="label">ответ</span>overwhelmed</div>
+  </li>
+
+  <li class="q-item" data-answer="controversial">
+    <div class="q-top"><div class="q-n">8</div><div class="q-ru">спорный / вызывающий споры<span class="hint">«This topic is a bit ___.»</span></div></div>
+    <div class="q-input-wrap"><input class="q-input" placeholder="одно слово…" spellcheck="false"><span class="q-check"></span></div>
+    <div class="q-answer"><span class="label">ответ</span>controversial</div>
+  </li>
+
+  <li class="q-item" data-answer="floodgates">
+    <div class="q-top"><div class="q-n">9</div><div class="q-ru">открыть шлюзы — дать начало большому потоку<span class="hint">«It opened the ___ for other brands.»</span></div></div>
+    <div class="q-input-wrap"><input class="q-input" placeholder="одно слово…" spellcheck="false"><span class="q-check"></span></div>
+    <div class="q-answer"><span class="label">ответ</span>floodgates</div>
+  </li>
+
+  <li class="q-item" data-answer="reimagine">
+    <div class="q-top"><div class="q-n">10</div><div class="q-ru">переосмыслить<span class="hint">«We need to ___ our content strategy.»</span></div></div>
+    <div class="q-input-wrap"><input class="q-input" placeholder="один глагол…" spellcheck="false"><span class="q-check"></span></div>
+    <div class="q-answer"><span class="label">ответ</span>reimagine</div>
+  </li>
+
+</ul>
+
+<!-- ЧАСТЬ 2: ФРАЗЫ ИЗ ВИДЕО -->
+<div class="sec-title">Часть 2 — Живые фразы из TED</div>
+<div class="sec-sub">Переведи фразу целиком. Можно не дословно — главное смысл и ключевые слова.</div>
+
+<ul class="q-list" id="list-phrases">
+
+  <li class="q-item" data-answer="doing well by doing good">
+    <div class="q-top"><div class="q-n">1</div><div class="q-ru">Зарабатывать делая доброе.<span class="hint">крылатая фраза из видео</span></div></div>
+    <div class="q-input-wrap"><input class="q-input" placeholder="фраза целиком…" spellcheck="false"><span class="q-check"></span></div>
+    <div class="q-answer"><span class="label">ответ</span>Doing well by doing good.</div>
+  </li>
+
+  <li class="q-item" data-answer="profits will automatically follow">
+    <div class="q-top"><div class="q-n">2</div><div class="q-ru">Прибыль придёт сама.<span class="hint">про стратегию — purpose first</span></div></div>
+    <div class="q-input-wrap"><input class="q-input" placeholder="фраза целиком…" spellcheck="false"><span class="q-check"></span></div>
+    <div class="q-answer"><span class="label">ответ</span>Profits will automatically follow.</div>
+  </li>
+
+  <li class="q-item" data-answer="it opened the floodgates">
+    <div class="q-top"><div class="q-n">3</div><div class="q-ru">Это открыло шлюзы — запустило что-то большое.<span class="hint">про момент когда что-то массово запустилось</span></div></div>
+    <div class="q-input-wrap"><input class="q-input" placeholder="фраза целиком…" spellcheck="false"><span class="q-check"></span></div>
+    <div class="q-answer"><span class="label">ответ</span>It opened the floodgates.</div>
+  </li>
+
+  <li class="q-item" data-answer="we started with solving a real problem">
+    <div class="q-top"><div class="q-n">4</div><div class="q-ru">Мы начали с решения реальной проблемы.<span class="hint">формула для рассказа о кейсе</span></div></div>
+    <div class="q-input-wrap"><input class="q-input" placeholder="фраза целиком…" spellcheck="false"><span class="q-check"></span></div>
+    <div class="q-answer"><span class="label">ответ</span>We started with solving a real problem.</div>
+  </li>
+
+  <li class="q-item" data-answer="marketing is not just a force for growth it's a force for good">
+    <div class="q-top"><div class="q-n">5</div><div class="q-ru">Маркетинг — это не просто инструмент роста, это инструмент блага.<span class="hint">главная цитата из TED</span></div></div>
+    <div class="q-input-wrap"><input class="q-input" placeholder="фраза целиком…" spellcheck="false"><span class="q-check"></span></div>
+    <div class="q-answer"><span class="label">ответ</span>Marketing is not just a force for growth — it's a force for good.</div>
+  </li>
+
+  <li class="q-item" data-answer="it really took the world by fire">
+    <div class="q-top"><div class="q-n">6</div><div class="q-ru">Это взорвало мир / произвело настоящий фурор.<span class="hint">«Our campaign really took social media ___»</span></div></div>
+    <div class="q-input-wrap"><input class="q-input" placeholder="фраза целиком…" spellcheck="false"><span class="q-check"></span></div>
+    <div class="q-answer"><span class="label">ответ</span>It really took the world by fire.</div>
+  </li>
+
+</ul>
+
+<!-- ЧАСТЬ 3: ОПИСАНИЕ КОНТЕНТА -->
+<div class="sec-title">Часть 3 — Профессиональные формулы</div>
+<div class="sec-sub">Переведи предложения про свою работу. Используй слова из урока.</div>
+
+<ul class="q-list" id="list-pro">
+
+  <li class="q-item" data-answer="my content is engaging">
+    <div class="q-top"><div class="q-n">1</div><div class="q-ru">Мой контент вовлекающий.</div></div>
+    <div class="q-input-wrap"><input class="q-input" placeholder="…" spellcheck="false"><span class="q-check"></span></div>
+    <div class="q-answer"><span class="label">ответ</span>My content is engaging.</div>
+  </li>
+
+  <li class="q-item" data-answer="i'm based in helsinki">
+    <div class="q-top"><div class="q-n">2</div><div class="q-ru">Я нахожусь в Хельсинки.</div></div>
+    <div class="q-input-wrap"><input class="q-input" placeholder="…" spellcheck="false"><span class="q-check"></span></div>
+    <div class="q-answer"><span class="label">ответ</span>I'm based in Helsinki.</div>
+  </li>
+
+  <li class="q-item" data-answer="the deadline is tight">
+    <div class="q-top"><div class="q-n">3</div><div class="q-ru">Дедлайн жёсткий / сжатый.</div></div>
+    <div class="q-input-wrap"><input class="q-input" placeholder="…" spellcheck="false"><span class="q-check"></span></div>
+    <div class="q-answer"><span class="label">ответ</span>The deadline is tight.</div>
+  </li>
+
+  <li class="q-item" data-answer="the brief is vague">
+    <div class="q-top"><div class="q-n">4</div><div class="q-ru">Бриф размытый / непонятный.</div></div>
+    <div class="q-input-wrap"><input class="q-input" placeholder="…" spellcheck="false"><span class="q-check"></span></div>
+    <div class="q-answer"><span class="label">ответ</span>The brief is vague.</div>
+  </li>
+
+  <li class="q-item" data-answer="i'm available on friday">
+    <div class="q-top"><div class="q-n">5</div><div class="q-ru">Я свободна в пятницу.</div></div>
+    <div class="q-input-wrap"><input class="q-input" placeholder="…" spellcheck="false"><span class="q-check"></span></div>
+    <div class="q-answer"><span class="label">ответ</span>I'm available on Friday.</div>
+  </li>
+
+  <li class="q-item" data-answer="i'm overwhelmed with projects right now">
+    <div class="q-top"><div class="q-n">6</div><div class="q-ru">Я сейчас перегружена проектами.</div></div>
+    <div class="q-input-wrap"><input class="q-input" placeholder="…" spellcheck="false"><span class="q-check"></span></div>
+    <div class="q-answer"><span class="label">ответ</span>I'm overwhelmed with projects right now.</div>
+  </li>
+
+  <li class="q-item" data-answer="trust from your audience is invaluable">
+    <div class="q-top"><div class="q-n">7</div><div class="q-ru">Доверие аудитории бесценно.</div></div>
+    <div class="q-input-wrap"><input class="q-input" placeholder="…" spellcheck="false"><span class="q-check"></span></div>
+    <div class="q-answer"><span class="label">ответ</span>Trust from your audience is invaluable.</div>
+  </li>
+
+  <li class="q-item" data-answer="we need to reimagine our content strategy">
+    <div class="q-top"><div class="q-n">8</div><div class="q-ru">Нам нужно переосмыслить нашу контент-стратегию.</div></div>
+    <div class="q-input-wrap"><input class="q-input" placeholder="…" spellcheck="false"><span class="q-check"></span></div>
+    <div class="q-answer"><span class="label">ответ</span>We need to reimagine our content strategy.</div>
+  </li>
+
+</ul>
+
+<!-- ЧАСТЬ 4: ПРИЛАГАТЕЛЬНЫЕ ДЛЯ КОНТЕНТА -->
+<div class="sec-title">Часть 4 — Мой контент какой?</div>
+<div class="sec-sub">Переведи прилагательное на английский. Используй в предложении «My content is…»</div>
+
+<ul class="q-list" id="list-adj">
+
+  <li class="q-item" data-answer="engaging">
+    <div class="q-top"><div class="q-n">1</div><div class="q-ru">вовлекающий, захватывающий<span class="hint">«My content is ___»</span></div></div>
+    <div class="q-input-wrap"><input class="q-input" placeholder="одно слово…" spellcheck="false"><span class="q-check"></span></div>
+    <div class="q-answer"><span class="label">ответ</span>engaging</div>
+  </li>
+
+  <li class="q-item" data-answer="story-led">
+    <div class="q-top"><div class="q-n">2</div><div class="q-ru">построенный на истории<span class="hint">«My content is ___»</span></div></div>
+    <div class="q-input-wrap"><input class="q-input" placeholder="одно слово…" spellcheck="false"><span class="q-check"></span></div>
+    <div class="q-answer"><span class="label">ответ</span>story-led</div>
+  </li>
+
+  <li class="q-item" data-answer="data-driven">
+    <div class="q-top"><div class="q-n">3</div><div class="q-ru">основанный на данных<span class="hint">«My content is ___»</span></div></div>
+    <div class="q-input-wrap"><input class="q-input" placeholder="одно слово…" spellcheck="false"><span class="q-check"></span></div>
+    <div class="q-answer"><span class="label">ответ</span>data-driven</div>
+  </li>
+
+  <li class="q-item" data-answer="visually strong">
+    <div class="q-top"><div class="q-n">4</div><div class="q-ru">визуально сильный<span class="hint">«My content is ___»</span></div></div>
+    <div class="q-input-wrap"><input class="q-input" placeholder="два слова…" spellcheck="false"><span class="q-check"></span></div>
+    <div class="q-answer"><span class="label">ответ</span>visually strong</div>
+  </li>
+
+  <li class="q-item" data-answer="conversion-focused">
+    <div class="q-top"><div class="q-n">5</div><div class="q-ru">нацеленный на конверсию<span class="hint">«My content is ___»</span></div></div>
+    <div class="q-input-wrap"><input class="q-input" placeholder="одно слово…" spellcheck="false"><span class="q-check"></span></div>
+    <div class="q-answer"><span class="label">ответ</span>conversion-focused</div>
+  </li>
+
+  <li class="q-item" data-answer="audience-first">
+    <div class="q-top"><div class="q-n">6</div><div class="q-ru">аудитория на первом месте<span class="hint">«My content is ___»</span></div></div>
+    <div class="q-input-wrap"><input class="q-input" placeholder="одно слово…" spellcheck="false"><span class="q-check"></span></div>
+    <div class="q-answer"><span class="label">ответ</span>audience-first</div>
+  </li>
+
+  <li class="q-item" data-answer="authentic">
+    <div class="q-top"><div class="q-n">7</div><div class="q-ru">аутентичный, настоящий<span class="hint">«My content is ___»</span></div></div>
+    <div class="q-input-wrap"><input class="q-input" placeholder="одно слово…" spellcheck="false"><span class="q-check"></span></div>
+    <div class="q-answer"><span class="label">ответ</span>authentic</div>
+  </li>
+
+  <li class="q-item" data-answer="strategic">
+    <div class="q-top"><div class="q-n">8</div><div class="q-ru">стратегический, с умыслом<span class="hint">«My content is ___»</span></div></div>
+    <div class="q-input-wrap"><input class="q-input" placeholder="одно слово…" spellcheck="false"><span class="q-check"></span></div>
+    <div class="q-answer"><span class="label">ответ</span>strategic</div>
+  </li>
+
+</ul>
+
+<!-- ЧАСТЬ 5: СЛОВАРЬ PRESENT CONTINUOUS -->
+<div class="sec-title">Часть 5 — Глаголы для рассказа о работе</div>
+<div class="sec-sub">Переведи слово или фразу. Потом составь своё предложение.</div>
+
+<ul class="q-list" id="list-verbs">
+
+  <li class="q-item" data-answer="currently">
+    <div class="q-top"><div class="q-n">1</div><div class="q-ru">в данный момент, сейчас<span class="hint">«I'm ___ working on…»</span></div></div>
+    <div class="q-input-wrap"><input class="q-input" placeholder="одно слово…" spellcheck="false"><span class="q-check"></span></div>
+    <div class="q-answer"><span class="label">ответ</span>currently</div>
+  </li>
+
+  <li class="q-item" data-answer="the deadline is on friday">
+    <div class="q-top"><div class="q-n">2</div><div class="q-ru">Дедлайн в пятницу.<span class="hint">полное предложение</span></div></div>
+    <div class="q-input-wrap"><input class="q-input" placeholder="фраза…" spellcheck="false"><span class="q-check"></span></div>
+    <div class="q-answer"><span class="label">ответ</span>The deadline is on Friday.</div>
+  </li>
+
+  <li class="q-item" data-answer="i'm focusing on the visuals">
+    <div class="q-top"><div class="q-n">3</div><div class="q-ru">Я фокусируюсь на визуале.<span class="hint">«I'm ___ on the visuals.»</span></div></div>
+    <div class="q-input-wrap"><input class="q-input" placeholder="фраза…" spellcheck="false"><span class="q-check"></span></div>
+    <div class="q-answer"><span class="label">ответ</span>I'm focusing on the visuals.</div>
+  </li>
+
+  <li class="q-item" data-answer="i'm developing a content strategy">
+    <div class="q-top"><div class="q-n">4</div><div class="q-ru">Я разрабатываю контент-стратегию.<span class="hint">«I'm ___ a content strategy.»</span></div></div>
+    <div class="q-input-wrap"><input class="q-input" placeholder="фраза…" spellcheck="false"><span class="q-check"></span></div>
+    <div class="q-answer"><span class="label">ответ</span>I'm developing a content strategy.</div>
+  </li>
+
+  <li class="q-item" data-answer="we're launching the campaign next week">
+    <div class="q-top"><div class="q-n">5</div><div class="q-ru">Мы запускаем кампанию на следующей неделе.<span class="hint">«We're ___ the campaign next week.»</span></div></div>
+    <div class="q-input-wrap"><input class="q-input" placeholder="фраза…" spellcheck="false"><span class="q-check"></span></div>
+    <div class="q-answer"><span class="label">ответ</span>We're launching the campaign next week.</div>
+  </li>
+
+  <li class="q-item" data-answer="i'm working on the brief right now">
+    <div class="q-top"><div class="q-n">6</div><div class="q-ru">Я работаю над брифом прямо сейчас.<span class="hint">«I'm working on the ___ right now.»</span></div></div>
+    <div class="q-input-wrap"><input class="q-input" placeholder="фраза…" spellcheck="false"><span class="q-check"></span></div>
+    <div class="q-answer"><span class="label">ответ</span>I'm working on the brief right now.</div>
+  </li>
+
+  <li class="q-item" data-answer="the strategy is clear">
+    <div class="q-top"><div class="q-n">7</div><div class="q-ru">Стратегия понятная / чёткая.</div></div>
+    <div class="q-input-wrap"><input class="q-input" placeholder="фраза…" spellcheck="false"><span class="q-check"></span></div>
+    <div class="q-answer"><span class="label">ответ</span>The strategy is clear.</div>
+  </li>
+
+</ul>
+
+<!-- КНОПКИ -->
+<button class="btn-check" onclick="checkAll()">Проверить все ответы</button>
+<button class="btn-reset" onclick="resetAll()">Начать заново</button>
+
+<!-- РЕЗУЛЬТАТ -->
+<div class="score" id="score">
+  <div class="score-n" id="score-n">—</div>
+  <div class="score-label" id="score-label">из 24 правильно</div>
+  <div class="score-msg" id="score-msg"></div>
+</div>
+
+</div>
+
+<script>
+function normalize(s){
+  return s.toLowerCase()
+    .replace(/['']/g,"'")
+    .replace(/[–—]/g,"-")
+    .replace(/[.,!?]/g,"")
+    .replace(/\s+/g," ")
+    .trim();
+}
+
+function checkAll(){
+  const items = document.querySelectorAll('.q-item');
+  let correct = 0;
+  let total = items.length;
+
+  items.forEach(item => {
+    const answer = normalize(item.getAttribute('data-answer'));
+    const input = item.querySelector('.q-input, .pt-input');
+    const checkEl = item.querySelector('.q-check');
+    const answerEl = item.querySelector('.q-answer, .pt-answer');
+    const val = normalize(input.value);
+
+    // fuzzy match — принимает если содержит ключевые слова
+    const answerWords = answer.split(' ').filter(w => w.length > 3);
+    const matchCount = answerWords.filter(w => val.includes(w)).length;
+    const isCorrect = val === answer || (answerWords.length > 0 && matchCount >= Math.ceil(answerWords.length * 0.7));
+
+    if(val === ''){
+      input.classList.remove('correct-input','wrong-input');
+      if(checkEl) checkEl.textContent = '';
+      if(answerEl) answerEl.classList.remove('show');
+      return;
+    }
+
+    if(isCorrect){
+      input.classList.add('correct-input');
+      input.classList.remove('wrong-input');
+      if(checkEl) checkEl.textContent = '✓';
+      if(checkEl) checkEl.style.color = '#1a5a2a';
+      item.classList.add('correct');
+      item.classList.remove('wrong');
+      if(answerEl) answerEl.classList.remove('show');
+      correct++;
+    } else {
+      input.classList.add('wrong-input');
+      input.classList.remove('correct-input');
+      if(checkEl) checkEl.textContent = '✗';
+      if(checkEl) checkEl.style.color = '#8b2020';
+      item.classList.add('wrong');
+      item.classList.remove('correct');
+      if(answerEl) answerEl.classList.add('show');
+    }
+  });
+
+  // count only answered
+  const answered = [...items].filter(i => {
+    const inp = i.querySelector('.q-input, .pt-input');
+    return inp && inp.value.trim() !== '';
+  });
+
+  const scoreEl = document.getElementById('score');
+  const scoreN = document.getElementById('score-n');
+  const scoreLabel = document.getElementById('score-label');
+  const scoreMsg = document.getElementById('score-msg');
+
+  scoreEl.classList.add('show');
+  scoreN.textContent = correct + ' / ' + answered.length;
+  scoreLabel.textContent = 'правильно из ' + answered.length + ' заполненных';
+
+  const pct = answered.length > 0 ? correct / answered.length : 0;
+  if(pct >= 0.9) scoreMsg.textContent = 'Отлично — почти всё правильно! 🎉';
+  else if(pct >= 0.7) scoreMsg.textContent = 'Хорошо — повтори слова которые выделены красным.';
+  else if(pct >= 0.5) scoreMsg.textContent = 'Неплохо — но красные слова точно нужно повторить ещё раз.';
+  else scoreMsg.textContent = 'Не страшно — посмотри на ответы и попробуй снова.';
+}
+
+function resetAll(){
+  document.querySelectorAll('.q-input, .pt-input').forEach(inp => {
+    inp.value = '';
+    inp.classList.remove('correct-input','wrong-input');
+  });
+  document.querySelectorAll('.q-check').forEach(el => el.textContent = '');
+  document.querySelectorAll('.q-item').forEach(el => {
+    el.classList.remove('correct','wrong');
+  });
+  document.querySelectorAll('.q-answer, .pt-answer').forEach(el => el.classList.remove('show'));
+  document.getElementById('score').classList.remove('show');
+}
+
+// Enter to move to next
+document.querySelectorAll('.q-input, .pt-input').forEach((inp, i, all) => {
+  inp.addEventListener('keydown', e => {
+    if(e.key === 'Enter' && i < all.length - 1){
+      e.preventDefault();
+      all[i+1].focus();
+    }
+  });
+});
+</script>
+</body>
+</html>
